@@ -24,6 +24,9 @@ profile.set_preference("general.useragent.override", user_agent)
 
 browser.get("https://www.howrse.pl/site/logIn")
 print("Logowanie...")
+# Zaakceptowanie cookies
+browser.find_element_by_xpath('/html/body/aside/div/article/div/div[2]/div/div/div[3]/form/button').click()
+
 try:
     userLogin = browser.find_element_by_id("login")
     userLogin.send_keys("login") # login gracza. Symulacja wpisania przed uruchomieniem należy podmienić
@@ -37,41 +40,40 @@ except NoSuchElementException:
 submitButn= browser.find_element_by_id("authentificationSubmit")
 submitButn.click() # kliknięcie "zaloguj"
 time.sleep(randint(2, 5))
-try:
-    browser.find_element_by_class_name("as-oil-content-overlay")
-    popup = True
-except NoSuchElementException:
-    popup = False
-if popup:
-    tak = browser.find_element_by_class_name("as-js-optin").click()
+
 # To była część pierwsza teraz przejście do konii
 print("Szukanie pierwszego konia...")
-browser.get("https://www.howrse.pl/elevage/chevaux/")
+browser.get("link do pierwszego konia") # wklej tu link lub zakomentuj tą linijkę i odhacz linijki 48-49 żeby samo szukało pierwszego konia w zakładce "Inne"
 time.sleep(randint(1, 5))
-doKonika1 = browser.find_element_by_class_name("horsename").click()
+# browser.get("https://www.howrse.pl/elevage/chevaux/?elevage=all-horses") # link do zakładki. Defaultowo jest to zakładka "Inne"
+# doKonika1 = browser.find_element_by_class_name("horsename").click()
 
 # Jesteśmy u pierwszego konia. Czas na sittering
 # kolejny = browser.find_element_by_id("nav-next")  # przycisk "kolejny"
 # poprzedni = browser.find_element_by_id("nav-previous")  # przycisk "poprzedni"
-i = 0
 
-while i <= 10:  # jeśli napotkamy 10 oporzadzone konie to skrypt sie zatrzyma. mo
-  try:  # sprawdzamy czy nie rodzi
+while True:
+    print("Oporzadzanie konia: ",i)
+    try:  # sprawdzamy czy nie rodzi
         browser.find_element_by_id("boutonVeterinaire")
         rodzi = True
     except NoSuchElementException:
         rodzi = False
     if rodzi:
+        current_url = browser.current_url
         browser.find_element_by_id("boutonVeterinaire").click()
         time.sleep(randint(2, 5))
         imie_zreba = browser.find_element_by_class_name("input")
         imie_zreba.send_keys("Krezus Junior")
         browser.find_element_by_xpath("//span[text()='Kontynuuj']").click()
-
+        browser.get(current_url)
+        time.sleep(randint(1, 5))
     try:  # sprawdzamy czy koń oporzadzony
         browser.find_element_by_xpath("//a[contains(@class, 'panser') and contains(@class, 'action-disabled')]")
         oporzadzony = True
+        print("oporzadzony")
     except NoSuchElementException:
+        print("brudas")
         oporzadzony = False
 
     try:  # sprawdzamy czy koń to źreb
@@ -87,22 +89,21 @@ while i <= 10:  # jeśli napotkamy 10 oporzadzone konie to skrypt sie zatrzyma. 
             time.sleep(randint(0, 5))
             czesanko = browser.find_element_by_id("boutonPanser").click()
         else:
-            kolejny = browser.find_element_by_id("nav-next").click()
-            # kolejny = browser.find_element_by_id("nav-previous").click()
-    else:  # jeśli koń żre już siano
+                kolejny = browser.find_element_by_id("nav-next").click()
+    else:
         try:  # sprawdzamy czy koń jest w ośrodku
             browser.find_element_by_xpath("//span[text()=' w ośrodku jeździeckim, aby położyć go spać już teraz!']")
             pozaOsrodkiem = True
         except NoSuchElementException:
             pozaOsrodkiem = False
         if pozaOsrodkiem:
-            time.sleep(randint(2, 5))
-            rejestracja = browser.find_element_by_xpath("//a[text()='Zarejestruj swojego konia']").click()
-            time.sleep(randint(3, 5))
-            dni60 = browser.find_element_by_xpath("//a[text()='60 dni']").click()
-            time.sleep(randint(5, 6))
-            eq1200 = browser.find_element_by_xpath("//strong[text()='1 200']").click()
-            time.sleep(randint(2, 5))
+                time.sleep(randint(2, 5))
+                rejestracja = browser.find_element_by_xpath("//a[text()='Zarejestruj swojego konia']").click()
+                time.sleep(randint(3, 5))
+                dni60 = browser.find_element_by_xpath("//a[text()='60 dni']").click()
+                time.sleep(randint(5, 6))
+                eq1200 = browser.find_element_by_xpath("//strong[text()='1 200']").click()
+                time.sleep(randint(2, 5))
         if not oporzadzony:
             spanko = browser.find_element_by_id("boutonCoucher").click()
             time.sleep(randint(0, 5))
@@ -115,7 +116,7 @@ while i <= 10:  # jeśli napotkamy 10 oporzadzone konie to skrypt sie zatrzyma. 
                 browser.find_element_by_xpath("//span[text()='Uwaga: Twoja klacz ma niedowagę, musisz jej podać następującą ilość paszy: 20, aby wróciła do formy!'] | //span[text()='Uwaga: jeden z Twoich koni ma niedowagę, musisz mu podać następującą ilość paszy: 20, aby wrócił do formy!'] ")
                 uwagaChudy = True
             except NoSuchElementException:
-                 uwagaChudy = False
+                    uwagaChudy = False
             try:
                 browser.find_element_by_xpath("//span[text()='Twoja klacz jest zbyt gruba. Nie karm jej dziś, aby mogła powrócić do normalnej wagi!'] | //span[text()='Twój koń jest zbyt gruby. Nie karm go dziś, aby mógł powrócić do normalnej wagi!']")
                 uwagaGruby = True
@@ -137,20 +138,17 @@ while i <= 10:  # jeśli napotkamy 10 oporzadzone konie to skrypt sie zatrzyma. 
                 time.sleep(randint(0, 5))
                 nakarm.click()
 
-            try:  # sprawdzamy czy koń może robić zlecenia
-                zlecenie_klik= browser.find_element_by_xpath("//a[contains(@class, 'missionEquus') or contains(@class, 'missionForet')  or contains(@class, 'missionMontagne')]")
-                zlecenie1 = True
-            except NoSuchElementException:
-                zlecenie1 = False
+        try:  # sprawdzamy czy koń może robić zlecenia
+            zlecenie_klik= browser.find_element_by_xpath("//a[contains(@class, 'missionEquus') or contains(@class, 'missionForet')  or contains(@class, 'missionMontagne')]")
+            zlecenie1 = True
+        except NoSuchElementException:
+            zlecenie1 = False
 
-            if zlecenie1:
-                zlecenie_klik.click()
-                time.sleep(randint(0, 5))
-            else:
-                kolejny = browser.find_element_by_id("nav-next").click()
-                # kolejny = browser.find_element_by_id("nav-previous").click()
+        if zlecenie1:
+            zlecenie_klik.click()
+            time.sleep(randint(0, 5))
+        else:
+            kolejny = browser.find_element_by_id("nav-next").click()
+            # kolejny = browser.find_element_by_id("nav-previous").click()
     kolejny = browser.find_element_by_id("nav-next").click()
-    # kolejny = browser.find_element_by_id("nav-previous").click()
-
-
-print("Koniec Psot!")
+     # kolejny = browser.find_element_by_id("nav-previous").click()
