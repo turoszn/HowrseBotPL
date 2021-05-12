@@ -71,9 +71,7 @@ while True:
     try:  # sprawdzamy czy koń oporzadzony
         browser.find_element_by_xpath("//a[contains(@class, 'panser') and contains(@class, 'action-disabled')]")
         oporzadzony = True
-        print("oporzadzony")
     except NoSuchElementException:
-        print("brudas")
         oporzadzony = False
 
     try:  # sprawdzamy czy koń to źreb
