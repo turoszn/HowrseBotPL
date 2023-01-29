@@ -3,6 +3,5 @@ Prymitywny bot do klikanej gierki howrse. Python+Selenium. Projekt powstał w ce
 
 UWAGA: NIE PONOSZE ODPOWIEDZIALNOŚCI ZA OTRZYMANE BANY ZA UŻYWANIE MOJEGO KODU!!!
 
-UWAGA2: KOD NIE UDOSTĘPNIA ŻADNYCH HASEŁ JAK NIEKTÓRZY SUGEROWALI!!!
 
 Żeby móc uruchomić kod musisz pobrać Pythona ze strony https://www.python.org/downloads/ i go zainstalować.
